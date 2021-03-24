@@ -2,7 +2,7 @@
 
 ### Installation
 ```bash
-npm i @ngneat/scam
+npm i @ngneat/scam --save-dev
 ```
 
 ### Usage

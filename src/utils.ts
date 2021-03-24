@@ -22,10 +22,10 @@ export function appendModule(options: Options, type: Entity) {
     });
 
     const isComp = type === 'component';
-    const basePath = isComp
-      ? path.resolve(options.path, options.name)
-      : options.path;
-    const compPath = path.resolve(basePath, `${options.name}.${type}.ts`);
+    const basePath = path.resolve(options.path, options.name);
+      const fileName = resolveFileName(options.name);
+
+    const compPath = path.resolve(basePath, `${fileName}.${type}.ts`);
     const sourceFile = project.createSourceFile(
       `${type}.ts`,
       tree.read(compPath)?.toString()
@@ -47,7 +47,7 @@ export function appendModule(options: Options, type: Entity) {
       },
     ]);
 
-    const name = strings.classify(options.name);
+    const name = strings.classify(fileName);
     const normalizeType = strings.classify(type);
     const moduleName = isComp
       ? `${name}Module`
@@ -85,6 +85,7 @@ export function ruleFactory(options: Options, type: Entity) {
     const rules = [
       externalSchematic('@schematics/angular', type, {
         ...options,
+        flat: false,
         export: true,
         skipImport: true,
       }),
@@ -93,4 +94,9 @@ export function ruleFactory(options: Options, type: Entity) {
 
     return chain(rules);
   };
+}
+
+function resolveFileName(path: string) {
+  const toArray = path.split('/');
+  return toArray[toArray.length - 1];
 }

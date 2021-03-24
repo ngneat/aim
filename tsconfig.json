@@ -19,7 +19,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es6",
+    "target": "ES2018",
     "types": [
       "jasmine",
       "node"

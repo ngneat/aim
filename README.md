@@ -27,3 +27,20 @@ ng g @ngneat/scam:pipe name
 ```
 
 <img src="./pipe.gif">
+
+## Notes
+- You can use every option from the default Angular schematics. For example:
+
+```bash
+ng g @ngneat/scam:component --name=bar --inlineStyle --inlineTemplate
+```
+
+- You can define default values for the schematics in your `angular.json` file:
+
+```json
+"schematics": {
+   "@ngneat/scam:component": {
+     "changeDetection": "OnPush"
+   }
+}
+```

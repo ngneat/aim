@@ -21,7 +21,6 @@ export function appendModule(options: Options, type: Entity) {
       },
     });
 
-    const isComp = type === 'component';
     const basePath = path.resolve(options.path, options.name);
       const fileName = resolveFileName(options.name);
 
@@ -49,9 +48,7 @@ export function appendModule(options: Options, type: Entity) {
 
     const name = strings.classify(fileName);
     const normalizeType = strings.classify(type);
-    const moduleName = isComp
-      ? `${name}Module`
-      : `${name}${normalizeType}Module`;
+    const moduleName = `${name}${normalizeType}Module`;
 
     sourceFile
       .addClass({ name: moduleName, isExported: true })

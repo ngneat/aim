@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/scam",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Angular schematics that creates SCAM components",
   "scripts": {
     "watch": "npm run build -- --watch",

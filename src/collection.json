@@ -4,19 +4,19 @@
     "component": {
       "description": "Create a SCAM",
       "factory": "./component/index#component",
-      "alias": ["c"],
+      "aliases": ["c"],
       "schema": "../../../@schematics/angular/component/schema.json"
     },
     "directive": {
       "description": "Create a SDAM",
       "factory": "./directive/index#directive",
-      "alias": ["c"],
+      "aliases": ["d"],
       "schema": "../../../@schematics/angular/directive/schema.json"
     },
     "pipe": {
       "description": "Create a SPAM",
       "factory": "./pipe/index#pipe",
-      "alias": ["c"],
+      "aliases": ["p"],
       "schema": "../../../@schematics/angular/pipe/schema.json"
     }
   }

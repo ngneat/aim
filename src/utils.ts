@@ -1,17 +1,33 @@
-import { strings } from '@angular-devkit/core';
-import { chain, externalSchematic, Tree } from '@angular-devkit/schematics';
+import { join, normalize, strings } from '@angular-devkit/core';
+import {
+  chain,
+  externalSchematic,
+  SchematicsException,
+  Tree,
+} from '@angular-devkit/schematics';
 import { Project, QuoteKind, ScriptTarget, StructureKind } from 'ts-morph';
-import * as path from 'path';
 import {
   getWorkspace,
   buildDefaultPath,
 } from '@schematics/angular/utility/workspace';
+import { parseName } from '@schematics/angular/utility/parse-name';
 
 export type Options = { name: string; path: string; project: string };
 type Entity = 'component' | 'directive' | 'pipe';
 
-export function appendModule(options: Options, type: Entity) {
+export function appendModule(options: any, type: Entity) {
   return function (tree: Tree) {
+    const typeStr = options.type ?? type;
+    const fileName = typeStr
+      ? `${strings.dasherize(options.name)}.${strings.dasherize(typeStr)}.ts`
+      : `${strings.dasherize(options.name)}.ts`;
+
+    const compPath = `${join(
+      normalize(options.path),
+      strings.dasherize(options.name), // because flat is always false
+      fileName
+    )}`;
+
     const project = new Project({
       manipulationSettings: {
         quoteKind: QuoteKind.Single,
@@ -21,10 +37,6 @@ export function appendModule(options: Options, type: Entity) {
       },
     });
 
-    const basePath = path.resolve(options.path, options.name);
-      const fileName = resolveFileName(options.name);
-
-    const compPath = path.resolve(basePath, `${fileName}.${type}.ts`);
     const sourceFile = project.createSourceFile(
       `${type}.ts`,
       tree.read(compPath)?.toString()
@@ -46,8 +58,8 @@ export function appendModule(options: Options, type: Entity) {
       },
     ]);
 
-    const name = strings.classify(fileName);
-    const normalizeType = strings.classify(type);
+    const name = strings.classify(options.name);
+    const normalizeType = strings.classify(typeStr);
     const moduleName = `${name}${normalizeType}Module`;
 
     sourceFile
@@ -73,11 +85,26 @@ export function appendModule(options: Options, type: Entity) {
 export function ruleFactory(options: Options, type: Entity) {
   return async (tree: Tree) => {
     const workspace = await getWorkspace(tree);
+
+    if (!options.project) {
+      options.project = workspace.extensions.defaultProject as string;
+    }
+
     const project = workspace.projects.get(options.project);
+
+    if (!project) {
+      throw new SchematicsException(
+        `Project '${options.project}' does not exist.`
+      );
+    }
 
     if (options.path === undefined && project) {
       options.path = buildDefaultPath(project);
     }
+
+    const parsedPath = parseName(options.path as string, options.name);
+    options.name = parsedPath.name;
+    options.path = parsedPath.path;
 
     const rules = [
       externalSchematic('@schematics/angular', type, {
@@ -91,9 +118,4 @@ export function ruleFactory(options: Options, type: Entity) {
 
     return chain(rules);
   };
-}
-
-function resolveFileName(path: string) {
-  const toArray = path.split('/');
-  return toArray[toArray.length - 1];
 }

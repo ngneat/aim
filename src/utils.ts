@@ -12,10 +12,15 @@ import {
 } from '@schematics/angular/utility/workspace';
 import { parseName } from '@schematics/angular/utility/parse-name';
 
-export type Options = { name: string; path: string; project: string };
+export type Options = {
+  name: string;
+  path: string;
+  project: string;
+  type?: string;
+};
 type Entity = 'component' | 'directive' | 'pipe';
 
-export function appendModule(options: any, type: Entity) {
+export function appendModule(options: Options, type: Entity) {
   return function (tree: Tree) {
     const typeStr = options.type ?? type;
     const fileName = typeStr

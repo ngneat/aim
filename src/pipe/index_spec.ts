@@ -7,7 +7,7 @@ import { getFileContent } from '@schematics/angular/utility/test';
 describe('@ngneat/scam Directive Schematic', () => {
   const schematicRunner = new SchematicTestRunner(
     '@ngneat/scam',
-    require.resolve('../collection.json')
+    require.resolve('../collection.dev.json')
   );
   const defaultOptions: any = {
     name: 'foo',

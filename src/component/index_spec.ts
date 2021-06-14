@@ -6,7 +6,7 @@ import {
 describe('@ngneat/scam Component Schematic', () => {
   const schematicRunner = new SchematicTestRunner(
     '@ngneat/scam',
-    require.resolve('../collection.json')
+    require.resolve('../collection.dev.json')
   );
   const defaultOptions: any = {
     name: 'foo',
@@ -391,7 +391,7 @@ describe('@ngneat/scam Component Schematic', () => {
       '/projects/bar/src/app/foo/foo.route.spec.ts'
     );
     expect(content).toContain('export class FooRoute implements OnInit');
-    expect(testContent).toContain('describe(\'FooRoute\'');
+    expect(testContent).toContain("describe('FooRoute'");
     expect(tree.files).toContain('/projects/bar/src/app/foo/foo.route.css');
     expect(tree.files).toContain('/projects/bar/src/app/foo/foo.route.html');
   });
@@ -406,7 +406,7 @@ describe('@ngneat/scam Component Schematic', () => {
       '/projects/bar/src/app/foo/foo.spec.ts'
     );
     expect(content).toContain('export class Foo implements OnInit');
-    expect(testContent).toContain('describe(\'Foo\'');
+    expect(testContent).toContain("describe('Foo'");
     expect(tree.files).toContain('/projects/bar/src/app/foo/foo.css');
     expect(tree.files).toContain('/projects/bar/src/app/foo/foo.html');
   });

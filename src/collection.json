@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../@angular-devkit/schematics/collection-schema.json",
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "component": {
       "description": "Create a SCAM",

@@ -1,18 +1,19 @@
-import { join, normalize, strings } from '@angular-devkit/core';
+import {join, normalize, strings} from '@angular-devkit/core';
+import {chain, externalSchematic, SchematicsException, Tree,} from '@angular-devkit/schematics';
 import {
-  chain,
-  externalSchematic,
-  SchematicsException,
-  Tree,
-} from '@angular-devkit/schematics';
-import { Project, QuoteKind, ScriptTarget, StructureKind } from 'ts-morph';
-import {
-  getWorkspace,
-  buildDefaultPath,
-} from '@schematics/angular/utility/workspace';
-import { parseName } from '@schematics/angular/utility/parse-name';
+  ObjectLiteralExpression,
+  Project,
+  PropertyAssignment,
+  QuoteKind,
+  ScriptTarget,
+  SourceFile,
+  StructureKind,
+  SyntaxKind
+} from 'ts-morph';
+import {buildDefaultPath, getWorkspace,} from '@schematics/angular/utility/workspace';
+import {parseName} from '@schematics/angular/utility/parse-name';
 
-export type Options = {
+export type Options = Record<string, string> & {
   name: string;
   path: string;
   project: string;
@@ -20,52 +21,81 @@ export type Options = {
 };
 type Entity = 'component' | 'directive' | 'pipe';
 
+function createSourceFile({tree, type, compPath}: {tree: Tree, type: Entity, compPath: string}) {
+  const project = new Project({
+    manipulationSettings: {
+      quoteKind: QuoteKind.Single,
+    },
+    compilerOptions: {
+      target: ScriptTarget.ES2015,
+    },
+  });
+
+  return project.createSourceFile(
+      `${type}.ts`,
+      tree.read(compPath)!.toString()
+  );
+}
+
+function resolveFileName(options: Options, type: string) {
+  const typeStr = options.type ?? type;
+
+  return typeStr
+      ? `${strings.dasherize(options.name)}.${strings.dasherize(typeStr)}.ts`
+      : `${strings.dasherize(options.name)}.ts`;
+}
+
+function resolvePath(options: Options, type: Entity) {
+  return `${join(
+      normalize(options.path),
+      strings.dasherize(options.name), // because flat is always false
+      resolveFileName(options, type)
+  )}`;
+}
+
+function getPipeOptions(source: SourceFile): ObjectLiteralExpression {
+  const [pipeOptions] = source.getClassOrThrow((dec) => !!dec.getDecorator('Pipe')).getDecoratorOrThrow('Pipe').getArguments() as [ObjectLiteralExpression];
+
+  return pipeOptions;
+}
+
+export function prefixPipeName(options: Options) {
+  return function (tree: Tree) {
+    const compPath = resolvePath(options, 'pipe');
+    const sourceFile = createSourceFile({tree, type: 'pipe', compPath});
+    const pipeOptions = getPipeOptions(sourceFile);
+    const nameProp = pipeOptions.getProperty('name') as PropertyAssignment;
+    const [value] = nameProp.getChildrenOfKind(SyntaxKind.StringLiteral);
+    const prefixed = strings.camelize(`${options.prefix} ${value.getLiteralValue()}`);
+
+    nameProp.setInitializer(`'${prefixed}'`);
+
+    tree.overwrite(compPath, sourceFile.getText());
+
+    return tree;
+  }
+}
+
 export function appendModule(options: Options, type: Entity) {
   return function (tree: Tree) {
     const typeStr = options.type ?? type;
-    const fileName = typeStr
-      ? `${strings.dasherize(options.name)}.${strings.dasherize(typeStr)}.ts`
-      : `${strings.dasherize(options.name)}.ts`;
-
-    const compPath = `${join(
-      normalize(options.path),
-      strings.dasherize(options.name), // because flat is always false
-      fileName
-    )}`;
-
-    const project = new Project({
-      manipulationSettings: {
-        quoteKind: QuoteKind.Single,
-      },
-      compilerOptions: {
-        target: ScriptTarget.ES2015,
-      },
-    });
-
-    const sourceFile = project.createSourceFile(
-      `${type}.ts`,
-      tree.read(compPath)?.toString()
-    );
+    const compPath = resolvePath(options, type)
+    const sourceFile = createSourceFile({tree, type, compPath});
 
     sourceFile.addImportDeclaration({
       moduleSpecifier: '@angular/common',
       namedImports: [
         {
           kind: StructureKind.ImportSpecifier,
-          name: 'CommonModule',
+          name: 'NgModule',
         },
       ],
     });
 
-    sourceFile.getImportDeclaration('@angular/core')?.addNamedImports([
-      {
-        name: 'NgModule',
-      },
-    ]);
-
     const name = strings.classify(options.name);
     const normalizeType = strings.classify(typeStr);
-    const moduleName = `${name}${normalizeType}Module`;
+    const className = `${name}${normalizeType}`;
+    const moduleName = `${className}Module`;
 
     sourceFile
       .addClass({ name: moduleName, isExported: true })
@@ -73,9 +103,9 @@ export function appendModule(options: Options, type: Entity) {
         name: 'NgModule',
         arguments: [
           `{
-       declarations: [${name}${normalizeType}],
-       imports: [CommonModule],
-       exports: [${name}${normalizeType}]
+       imports: [],
+       declarations: [${className}],
+       exports: [${className}]
       }`,
         ],
       })
@@ -120,6 +150,10 @@ export function ruleFactory(options: Options, type: Entity) {
       }),
       appendModule(options, type),
     ];
+
+    if (type === 'pipe' && options.prefix) {
+      rules.push(prefixPipeName(options));
+    }
 
     return chain(rules);
   };

@@ -1,8 +1,5 @@
-import {
-  SchematicTestRunner,
-  UnitTestTree,
-} from '@angular-devkit/schematics/testing';
-import { getFileContent } from '@schematics/angular/utility/test';
+import {SchematicTestRunner, UnitTestTree,} from '@angular-devkit/schematics/testing';
+import {getFileContent} from '@schematics/angular/utility/test';
 
 describe('@ngneat/scam Directive Schematic', () => {
   const schematicRunner = new SchematicTestRunner(
@@ -52,44 +49,41 @@ describe('@ngneat/scam Directive Schematic', () => {
       .toPromise();
   });
 
+  function getPipeContent(tree: UnitTestTree, path = 'foo/foo.pipe.ts') {
+    return getFileContent(
+        tree,
+        `/projects/bar/src/app/${path}`
+    );
+  }
+
+  function assertPipe(tree: UnitTestTree) {
+    const files = tree.files;
+    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.spec.ts');
+    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.ts');
+    const fileContent = getPipeContent(tree);
+    expect(fileContent).toMatch(/export class FooPipeModule/);
+    expect(fileContent).toMatch(/declarations: \[FooPipe]/);
+    expect(fileContent).toContain(
+        'transform(value: unknown, ...args: unknown[])'
+    );
+  }
+
   it('should create a pipe', async () => {
     const options = { ...defaultOptions };
 
     const tree = await schematicRunner
       .runSchematicAsync('pipe', options, appTree)
       .toPromise();
-    const files = tree.files;
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.spec.ts');
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.ts');
-    const fileContent = getFileContent(
-      tree,
-      '/projects/bar/src/app/foo/foo.pipe.ts'
-    );
-    expect(fileContent).toMatch(/export class FooPipeModule/);
-    expect(fileContent).toMatch(/declarations: \[FooPipe]/);
-    expect(fileContent).toContain(
-      'transform(value: unknown, ...args: unknown[])'
-    );
+    assertPipe(tree);
   });
 
-  it('should create a pipe with aliases', async () => {
+  it('should create a pipe with aliased command', async () => {
     const options = { ...defaultOptions };
 
     const tree = await schematicRunner
       .runSchematicAsync('p', options, appTree)
       .toPromise();
-    const files = tree.files;
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.spec.ts');
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.ts');
-    const fileContent = getFileContent(
-      tree,
-      '/projects/bar/src/app/foo/foo.pipe.ts'
-    );
-    expect(fileContent).toMatch(/export class FooPipeModule/);
-    expect(fileContent).toMatch(/declarations: \[FooPipe]/);
-    expect(fileContent).toContain(
-      'transform(value: unknown, ...args: unknown[])'
-    );
+    assertPipe(tree);
   });
 
   it('should ignore the module option', async () => {
@@ -175,5 +169,23 @@ describe('@ngneat/scam Directive Schematic', () => {
       .runSchematicAsync('pipe', defaultOptions, appTree)
       .toPromise();
     expect(appTree.files).toContain('/projects/bar/custom/app/foo/foo.pipe.ts');
+  });
+
+  it('should respect the prefix option', async () => {
+    let options = { ...defaultOptions, prefix: 'ngneat' };
+
+    let tree = await schematicRunner
+        .runSchematicAsync('pipe', options, appTree)
+        .toPromise();
+    let fileContent = getPipeContent(tree);
+    expect(fileContent).toMatch(/name: 'ngneatFoo'/);
+
+    options = {...options, name: 'otherFoo'};
+
+    tree = await schematicRunner
+        .runSchematicAsync('pipe', options, appTree)
+        .toPromise();
+    fileContent = getPipeContent(tree, 'other-foo/other-foo.pipe.ts');
+    expect(fileContent).toMatch(/name: 'ngneatOtherFoo'/);
   });
 });

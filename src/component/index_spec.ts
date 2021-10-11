@@ -78,7 +78,6 @@ describe('@ngneat/aim Component Schematic', () => {
       '/projects/bar/src/app/foo/foo.component.ts'
     );
     expect(moduleContent).toMatch(/export\s*class\s*FooComponentModule/);
-    expect(moduleContent).toMatch(/imports:\s+\[CommonModule]/);
     expect(moduleContent).toMatch(/declarations:\s+\[FooComponent]/);
     expect(moduleContent).toMatch(/exports:\s+\[FooComponent]/);
   });
@@ -101,7 +100,6 @@ describe('@ngneat/aim Component Schematic', () => {
       '/projects/bar/src/app/foo/foo.component.ts'
     );
     expect(moduleContent).toMatch(/export\s*class\s*FooComponentModule/);
-    expect(moduleContent).toMatch(/imports:\s+\[CommonModule]/);
     expect(moduleContent).toMatch(/declarations:\s+\[FooComponent]/);
     expect(moduleContent).toMatch(/exports:\s+\[FooComponent]/);
   });

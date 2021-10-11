@@ -3,9 +3,9 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 
-describe('@ngneat/scam Directive Schematic', () => {
+describe('@ngneat/aim Directive Schematic', () => {
   const schematicRunner = new SchematicTestRunner(
-    '@ngneat/scam',
+    '@ngneat/aim',
     require.resolve('../collection.dev.json')
   );
   const defaultOptions: any = {

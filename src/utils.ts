@@ -5,7 +5,7 @@ import {
   SchematicsException,
   Tree,
 } from '@angular-devkit/schematics';
-import { Project, QuoteKind, ScriptTarget, StructureKind } from 'ts-morph';
+import { Project, QuoteKind, ScriptTarget } from 'ts-morph';
 import {
   getWorkspace,
   buildDefaultPath,
@@ -47,16 +47,6 @@ export function appendModule(options: Options, type: Entity) {
       tree.read(compPath)?.toString()
     );
 
-    sourceFile.addImportDeclaration({
-      moduleSpecifier: '@angular/common',
-      namedImports: [
-        {
-          kind: StructureKind.ImportSpecifier,
-          name: 'CommonModule',
-        },
-      ],
-    });
-
     sourceFile.getImportDeclaration('@angular/core')?.addNamedImports([
       {
         name: 'NgModule',
@@ -74,7 +64,7 @@ export function appendModule(options: Options, type: Entity) {
         arguments: [
           `{
        declarations: [${name}${normalizeType}],
-       imports: [CommonModule],
+       imports: [],
        exports: [${name}${normalizeType}]
       }`,
         ],

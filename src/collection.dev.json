@@ -2,21 +2,27 @@
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "component": {
-      "description": "Create a SCAM",
+      "description": "Create an inline Angular component",
       "factory": "./component/index#component",
-      "aliases": ["c"],
+      "aliases": [
+        "c"
+      ],
       "schema": "../node_modules/@schematics/angular/component/schema.json"
     },
     "directive": {
-      "description": "Create a SDAM",
+      "description": "Create an inline Angular directive",
       "factory": "./directive/index#directive",
-      "aliases": ["d"],
+      "aliases": [
+        "d"
+      ],
       "schema": "../node_modules/@schematics/angular/directive/schema.json"
     },
     "pipe": {
-      "description": "Create a SPAM",
+      "description": "Create an inline Angular pipe",
       "factory": "./pipe/index#pipe",
-      "aliases": ["p"],
+      "aliases": [
+        "p"
+      ],
       "schema": "../node_modules/@schematics/angular/pipe/schema.json"
     }
   }

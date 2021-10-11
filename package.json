@@ -1,10 +1,10 @@
 {
-  "name": "@ngneat/scam",
-  "version": "2.1.0",
-  "description": "Angular schematics that creates SCAM components",
+  "name": "@ngneat/aim",
+  "version": "1.0.1",
+  "description": "Angular schematics that creates Angular inline modules",
   "scripts": {
     "watch": "npm run build -- --watch",
-    "try": "schematics .:scam",
+    "try": "schematics .:aim",
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && jasmine src/**/*_spec.js"
   },

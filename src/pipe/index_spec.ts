@@ -4,9 +4,9 @@ import {
 } from '@angular-devkit/schematics/testing';
 import { getFileContent } from '@schematics/angular/utility/test';
 
-describe('@ngneat/scam Directive Schematic', () => {
+describe('@ngneat/aim Directive Schematic', () => {
   const schematicRunner = new SchematicTestRunner(
-    '@ngneat/scam',
+    '@ngneat/aim',
     require.resolve('../collection.dev.json')
   );
   const defaultOptions: any = {

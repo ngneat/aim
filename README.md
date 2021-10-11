@@ -1,9 +1,9 @@
-# Single (CPD) Angular Module Schematics
+# Angular Inline Module Schematics
 
 ### Installation
 
 ```bash
-npm i @ngneat/scam --save-dev
+npm i @ngneat/aim --save-dev
 ```
 
 ### Usage
@@ -11,40 +11,40 @@ npm i @ngneat/scam --save-dev
 ### Component
 
 ```bash
-ng g @ngneat/scam:component name
+ng g @ngneat/aim:component name
 ```
 
-<img src="./component.gif">
+<img src="./component.png">
 
 ### Directive
 
 ```bash
-ng g @ngneat/scam:directive name
+ng g @ngneat/aim:directive name
 ```
 
-<img src="./directive.gif">
+<img src="./directive.png">
 
 ### Pipe
 
 ```bash
-ng g @ngneat/scam:pipe name
+ng g @ngneat/aim:pipe name
 ```
 
-<img src="./pipe.gif">
+<img src="./pipe.png">
 
 ## Notes
 
 - You can use every option from the default Angular schematics. For example:
 
 ```bash
-ng g @ngneat/scam:component --name=bar --inlineStyle --inlineTemplate
+ng g @ngneat/aim:component --name=bar --inlineStyle --inlineTemplate
 ```
 
 - You can define default values for the schematics in your `angular.json` file:
 
 ```json
 "schematics": {
-   "@ngneat/scam:component": {
+   "@ngneat/aim:component": {
      "changeDetection": "OnPush"
    }
 }

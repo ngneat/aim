@@ -154,24 +154,7 @@ describe('@ngneat/aim Component Schematic', () => {
     expect(tsContent).toMatch(/encapsulation: ViewEncapsulation.None/);
   });
 
-  it('should not create a flat component', async () => {
-    const options = { ...defaultOptions, flat: false };
-
-    const tree = await schematicRunner
-      .runSchematicAsync('component', options, appTree)
-      .toPromise();
-    const files = tree.files;
-    expect(files).toEqual(
-      jasmine.arrayContaining([
-        '/projects/bar/src/app/foo/foo.component.css',
-        '/projects/bar/src/app/foo/foo.component.html',
-        '/projects/bar/src/app/foo/foo.component.spec.ts',
-        '/projects/bar/src/app/foo/foo.component.ts',
-      ])
-    );
-  });
-
-  it('should create a flat component', async () => {
+  it('should respect the flat option', async () => {
     const options = { ...defaultOptions, flat: true };
     const tree = await schematicRunner
       .runSchematicAsync('component', options, appTree)

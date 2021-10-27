@@ -13,7 +13,7 @@ describe('@ngneat/aim Directive Schematic', () => {
     module: undefined,
     export: false,
     prefix: 'app',
-    flat: true,
+    flat: false,
     project: 'bar',
   };
 

@@ -13,7 +13,7 @@ describe('@ngneat/aim Directive Schematic', () => {
     name: 'foo',
     module: undefined,
     export: false,
-    flat: true,
+    flat: false,
     project: 'bar',
   };
 
@@ -135,15 +135,16 @@ describe('@ngneat/aim Directive Schematic', () => {
     expect(fileContent).toMatch(/export class FooPipeModule/);
   });
 
-  it('should ignore the flat flag', async () => {
-    const options = { ...defaultOptions, flat: false };
+  it('should respect the flat flag', async () => {
+    const options = { ...defaultOptions, flat: true };
 
     const tree = await schematicRunner
       .runSchematicAsync('pipe', options, appTree)
       .toPromise();
     const files = tree.files;
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.spec.ts');
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.pipe.spec.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.pipe.ts');
+
     const moduleContent = getFileContent(
       tree,
       '/projects/bar/src/app/app.module.ts'

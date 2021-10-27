@@ -17,6 +17,7 @@ export type Options = {
   path: string;
   project: string;
   type?: string;
+  flat: boolean;
 };
 type Entity = 'component' | 'directive' | 'pipe';
 
@@ -29,7 +30,7 @@ export function appendModule(options: Options, type: Entity) {
 
     const compPath = `${join(
       normalize(options.path),
-      strings.dasherize(options.name), // because flat is always false
+      strings.dasherize(options.flat ? '' : options.name),
       fileName
     )}`;
 
@@ -104,7 +105,6 @@ export function ruleFactory(options: Options, type: Entity) {
     const rules = [
       externalSchematic('@schematics/angular', type, {
         ...options,
-        flat: false,
         export: true,
         skipImport: true,
       }),

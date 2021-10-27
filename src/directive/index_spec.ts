@@ -60,10 +60,10 @@ describe('@ngneat/aim Directive Schematic', () => {
       .toPromise();
     const files = tree.files;
 
-    expect(files).toContain('/projects/bar/src/app/foo/foo.directive.spec.ts');
-    expect(files).toContain('/projects/bar/src/app/foo/foo.directive.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.directive.spec.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.directive.ts');
     const moduleContent = tree.readContent(
-      '/projects/bar/src/app/foo/foo.directive.ts'
+      '/projects/bar/src/app/foo.directive.ts'
     );
     expect(moduleContent).toMatch(/export class FooDirectiveModule/);
     expect(moduleContent).toMatch(/declarations: \[FooDirective]/);
@@ -77,16 +77,16 @@ describe('@ngneat/aim Directive Schematic', () => {
       .toPromise();
     const files = tree.files;
 
-    expect(files).toContain('/projects/bar/src/app/foo/foo.directive.spec.ts');
-    expect(files).toContain('/projects/bar/src/app/foo/foo.directive.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.directive.spec.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.directive.ts');
     const moduleContent = tree.readContent(
-      '/projects/bar/src/app/foo/foo.directive.ts'
+      '/projects/bar/src/app/foo.directive.ts'
     );
     expect(moduleContent).toMatch(/export class FooDirectiveModule/);
     expect(moduleContent).toMatch(/declarations: \[FooDirective]/);
   });
 
-  it('should create and ignore the flat flag', async () => {
+  it('should respect the flat flag', async () => {
     const options = { ...defaultOptions, flat: false };
 
     const tree = await schematicRunner
@@ -100,7 +100,7 @@ describe('@ngneat/aim Directive Schematic', () => {
 
   it('should ignore the module option', async () => {
     const options = { ...defaultOptions, flat: false, module: 'foo.module' };
-    const fooModule = '/projects/bar/src/app/foo/foo.module.ts';
+    const fooModule = '/projects/bar/src/app/foo.module.ts';
     appTree.create(
       fooModule,
       `
@@ -136,7 +136,7 @@ describe('@ngneat/aim Directive Schematic', () => {
       /exports: \[\n(\s*) {2}FooDirective\n\1]/
     );
     const directiveModuleContent = tree.readContent(
-      '/projects/bar/src/app/foo/foo.directive.ts'
+      '/projects/bar/src/app/foo.directive.ts'
     );
     expect(directiveModuleContent).toMatch(/export class FooDirectiveModule/);
   });
@@ -148,7 +148,7 @@ describe('@ngneat/aim Directive Schematic', () => {
       .runSchematicAsync('directive', options, appTree)
       .toPromise();
     const content = tree.readContent(
-      '/projects/bar/src/app/my-dir/my-dir.directive.ts'
+      '/projects/bar/src/app/my-dir.directive.ts'
     );
     expect(content).toMatch(/selector: '\[appMyDir]'/);
   });
@@ -160,7 +160,7 @@ describe('@ngneat/aim Directive Schematic', () => {
       .toPromise();
 
     const content = appTree.readContent(
-      '/projects/bar/src/app/sub/test/test.directive.ts'
+      '/projects/bar/src/app/sub/test.directive.ts'
     );
     expect(content).toMatch(/selector: '\[appTest]'/);
   });
@@ -171,9 +171,7 @@ describe('@ngneat/aim Directive Schematic', () => {
       .runSchematicAsync('directive', options, appTree)
       .toPromise();
 
-    const content = tree.readContent(
-      '/projects/bar/src/app/foo/foo.directive.ts'
-    );
+    const content = tree.readContent('/projects/bar/src/app/foo.directive.ts');
     expect(content).toMatch(/selector: '\[preFoo]'/);
   });
 
@@ -183,9 +181,7 @@ describe('@ngneat/aim Directive Schematic', () => {
       .runSchematicAsync('directive', options, appTree)
       .toPromise();
 
-    const content = tree.readContent(
-      '/projects/bar/src/app/foo/foo.directive.ts'
-    );
+    const content = tree.readContent('/projects/bar/src/app/foo.directive.ts');
     expect(content).toMatch(/selector: '\[appFoo]'/);
   });
 
@@ -195,9 +191,7 @@ describe('@ngneat/aim Directive Schematic', () => {
       .runSchematicAsync('directive', options, appTree)
       .toPromise();
 
-    const content = tree.readContent(
-      '/projects/bar/src/app/foo/foo.directive.ts'
-    );
+    const content = tree.readContent('/projects/bar/src/app/foo.directive.ts');
     expect(content).toMatch(/selector: '\[foo]'/);
   });
 
@@ -210,7 +204,7 @@ describe('@ngneat/aim Directive Schematic', () => {
       .runSchematicAsync('directive', defaultOptions, appTree)
       .toPromise();
     expect(appTree.files).toContain(
-      '/projects/bar/custom/app/foo/foo.directive.ts'
+      '/projects/bar/custom/app/foo.directive.ts'
     );
   });
 
@@ -220,7 +214,7 @@ describe('@ngneat/aim Directive Schematic', () => {
       .runSchematicAsync('directive', options, appTree)
       .toPromise();
 
-    expect(tree.files).toContain('/projects/bar/src/app/foo/foo.directive.ts');
+    expect(tree.files).toContain('/projects/bar/src/app/foo.directive.ts');
     expect(tree.files).not.toContain(
       '/projects/bar/src/app/foo/foo.directive.spec.ts'
     );

@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/aim",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Angular schematics that creates Angular inline modules",
   "scripts": {
     "watch": "npm run build -- --watch",

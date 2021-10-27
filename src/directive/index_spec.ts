@@ -86,16 +86,16 @@ describe('@ngneat/aim Directive Schematic', () => {
     expect(moduleContent).toMatch(/declarations: \[FooDirective]/);
   });
 
-  it('should create and ignore the flat flag', async () => {
-    const options = { ...defaultOptions, flat: false };
+  it('should respect the flat flag', async () => {
+    const options = { ...defaultOptions, flat: true };
 
     const tree = await schematicRunner
       .runSchematicAsync('directive', options, appTree)
       .toPromise();
     const files = tree.files;
 
-    expect(files).toContain('/projects/bar/src/app/foo/foo.directive.spec.ts');
-    expect(files).toContain('/projects/bar/src/app/foo/foo.directive.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.directive.spec.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.directive.ts');
   });
 
   it('should ignore the module option', async () => {

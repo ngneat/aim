@@ -13,7 +13,7 @@ describe('@ngneat/aim Directive Schematic', () => {
     name: 'foo',
     module: undefined,
     export: false,
-    flat: false,
+    flat: true,
     project: 'bar',
   };
 
@@ -59,11 +59,11 @@ describe('@ngneat/aim Directive Schematic', () => {
       .runSchematicAsync('pipe', options, appTree)
       .toPromise();
     const files = tree.files;
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.spec.ts');
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.pipe.spec.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.pipe.ts');
     const fileContent = getFileContent(
       tree,
-      '/projects/bar/src/app/foo/foo.pipe.ts'
+      '/projects/bar/src/app/foo.pipe.ts'
     );
     expect(fileContent).toMatch(/export class FooPipeModule/);
     expect(fileContent).toMatch(/declarations: \[FooPipe]/);
@@ -79,11 +79,11 @@ describe('@ngneat/aim Directive Schematic', () => {
       .runSchematicAsync('p', options, appTree)
       .toPromise();
     const files = tree.files;
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.spec.ts');
-    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.pipe.spec.ts');
+    expect(files).toContain('/projects/bar/src/app/foo.pipe.ts');
     const fileContent = getFileContent(
       tree,
-      '/projects/bar/src/app/foo/foo.pipe.ts'
+      '/projects/bar/src/app/foo.pipe.ts'
     );
     expect(fileContent).toMatch(/export class FooPipeModule/);
     expect(fileContent).toMatch(/declarations: \[FooPipe]/);
@@ -130,20 +130,20 @@ describe('@ngneat/aim Directive Schematic', () => {
     expect(content).not.toMatch(/import { FooPipe }/);
 
     const fileContent = appTree.readContent(
-      '/projects/bar/src/app/admin/module/foo/foo.pipe.ts'
+      '/projects/bar/src/app/admin/module/foo.pipe.ts'
     );
     expect(fileContent).toMatch(/export class FooPipeModule/);
   });
 
   it('should respect the flat flag', async () => {
-    const options = { ...defaultOptions, flat: true };
+    const options = { ...defaultOptions, flat: false };
 
     const tree = await schematicRunner
       .runSchematicAsync('pipe', options, appTree)
       .toPromise();
     const files = tree.files;
-    expect(files).toContain('/projects/bar/src/app/foo.pipe.spec.ts');
-    expect(files).toContain('/projects/bar/src/app/foo.pipe.ts');
+    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.spec.ts');
+    expect(files).toContain('/projects/bar/src/app/foo/foo.pipe.ts');
 
     const moduleContent = getFileContent(
       tree,
@@ -161,10 +161,8 @@ describe('@ngneat/aim Directive Schematic', () => {
       .runSchematicAsync('pipe', options, appTree)
       .toPromise();
 
-    expect(tree.files).toContain('/projects/bar/src/app/foo/foo.pipe.ts');
-    expect(tree.files).not.toContain(
-      '/projects/bar/src/app/foo/foo.pipe.spec.ts'
-    );
+    expect(tree.files).toContain('/projects/bar/src/app/foo.pipe.ts');
+    expect(tree.files).not.toContain('/projects/bar/src/app/foo.pipe.spec.ts');
   });
 
   it('should respect the sourceRoot value', async () => {
@@ -175,6 +173,6 @@ describe('@ngneat/aim Directive Schematic', () => {
     appTree = await schematicRunner
       .runSchematicAsync('pipe', defaultOptions, appTree)
       .toPromise();
-    expect(appTree.files).toContain('/projects/bar/custom/app/foo/foo.pipe.ts');
+    expect(appTree.files).toContain('/projects/bar/custom/app/foo.pipe.ts');
   });
 });

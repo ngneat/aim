@@ -1,0 +1,72 @@
+{
+  "name": "@ngneat/aim-to-standalone",
+  "version": "1.0.0-beta.0",
+  "description": "Convert AIM to standalone",
+  "author": "Netanel Basal @NetanelBasal",
+  "bin": {
+    "aim-to-standalone": "./bin/run"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/https://github.com/ngneat/aim/https://github.com/ngneat/aim",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": "https://github.com/ngneat/aim/https://github.com/ngneat/aim",
+  "files": [
+    "/bin",
+    "/dist",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "dependencies": {
+    "@oclif/core": "^1",
+    "@oclif/plugin-help": "^5",
+    "@oclif/plugin-plugins": "^2.0.1",
+    "inquirer": "^8.2.4",
+    "ts-morph": "^15.1.0"
+  },
+  "devDependencies": {
+    "@oclif/test": "^2",
+    "@types/inquirer": "^8.2.1",
+    "@types/jest": "^28.1.1",
+    "@types/node": "^16.9.4",
+    "globby": "^11",
+    "jest": "^28.1.0",
+    "oclif": "^3",
+    "shx": "^0.3.3",
+    "ts-jest": "^28.0.4",
+    "ts-node": "^10.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.3"
+  },
+  "oclif": {
+    "bin": "aim-to-standalone",
+    "dirname": "aim-to-standalone",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-plugins"
+    ],
+    "topicSeparator": " ",
+    "topics": {
+      "start": {}
+    }
+  },
+  "scripts": {
+    "w": "tsc -w",
+    "test": "jest",
+    "build": "shx rm -rf dist && tsc -b",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "prepack": "yarn build && oclif manifest && oclif readme",
+    "version": "oclif readme && git add README.md"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "bugs": "https://github.com/https://github.com/ngneat/aim/https://github.com/ngneat/aim/issues",
+  "keywords": [
+    "oclif"
+  ],
+  "types": "dist/index.d.ts"
+}

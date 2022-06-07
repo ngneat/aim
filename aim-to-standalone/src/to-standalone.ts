@@ -123,11 +123,13 @@ export function refactorToAim(
       // It could have multiple decorators so we need to find the right one
       const relatedClassDec = aimModule.sourceFile
         .getClasses()
-        .find((d) => d.getName() === relatedClassName)!
-        .getDecorators()
-        .find((d) => {
+        .find((d) => d.getName() === relatedClassName)?.getDecorators()?.find((d) => {
           return d.getName().match(/Directive|Component|Pipe/);
-        })!;
+        });
+
+        if(!relatedClassDec) {
+          return;
+        }
 
       const relatedClassDecoratorArgs =
         relatedClassDec.getArguments()[0] as ObjectLiteralExpression;

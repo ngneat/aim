@@ -128,7 +128,7 @@ export function refactorToAim(
         });
 
         if(!relatedClassDec) {
-          return;
+          continue;
         }
 
       const relatedClassDecoratorArgs =

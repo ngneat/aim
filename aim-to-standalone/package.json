@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/aim-to-standalone",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Convert AIM to standalone",
   "author": "Netanel Basal @NetanelBasal",
   "bin": {
